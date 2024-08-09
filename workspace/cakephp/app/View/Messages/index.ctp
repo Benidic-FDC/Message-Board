@@ -7,16 +7,18 @@
                 </div>
             <?php endif; ?>
             <div class="row mb-4 align-items-center">
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <h1 class="display-5 fw-bold">Message List</h1>
                 </div>
-                <div class="col-md-4 float-end">
+                <!-- <div class="col-md-4 float-end">
                     <input type="search" id="searchMessage" class="form-control" placeholder="Search Message">
-                </div>
-                <div class="col-md-2 text-md-end">
+                </div> -->
+                <div class="col-md-4 text-md-end">
                     <?php echo $this->Html->link('New Message', array('controller' => 'messages', 'action' => 'new_message'), array('class' => 'btn btn-primary shadow-lg')); ?>
                 </div>
             </div>
+            <!-- <div id="searchResults">
+            </div> -->
 
             <div class="card border-0 shadow-lg rounded-4">
                 <div class="card-header bg-primary text-white rounded-top">
@@ -25,9 +27,11 @@
                 <ul class="list-group list-group-flush" style="max-height: 500px; overflow-y: auto;" id="message-list">
                     <?php echo $this->element('messages'); ?>
                 </ul>
+                <?php if (!empty($messages)): ?>
                 <div class="card-footer bg-light text-center border-0 rounded-bottom">
                     <button class="btn btn-outline-primary rounded-pill shadow-sm my-1" id="show-more">Show More</button>
                 </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -46,31 +50,30 @@ $(document).ready(function() {
         });
     });
     
-    var typingTimer;
-    var doneTypingInterval = 500; // ms
+    $('#searchMessage').on('input', function() {
+        var query = $(this).val();
 
-    $('#searchMessage').on('keyup', function() {
-        clearTimeout(typingTimer);
-        if ($('#searchMessage').val()) {
-            typingTimer = setTimeout(performSearch, doneTypingInterval);
+        if (query.length >= 3) {
+            $.ajax({
+                url: '<?php echo $this->Html->url(array('controller' => 'messages', 'action' => 'messageSearch')); ?>',
+                method: 'GET',
+                data: { q: query },
+                success: function(response) {
+                    $('#message-list').html(response);
+                },
+                error: function() {
+                    $('#message-list').html('<p>Error retrieving results.</p>');
+                }
+            });
         } else {
-            $('#searchResults').empty();
+            $.ajax({
+                url: '<?php echo $this->Html->url(array('controller' => 'messages', 'action' => 'index')); ?>',
+                method: 'GET',
+                success: function(response) {
+                    $('#message-list').html($(response).find('#message-list').html());
+                }
+            });
         }
     });
-
-    function performSearch() {
-        var query = $('#searchMessage').val();
-        $.ajax({
-            url: '/messages/messageSearch',
-            type: 'GET',
-            data: { query: query },
-            success: function(response) {
-                $('#searchResults').html(response);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-            }
-        });
-    }
 });
 </script>

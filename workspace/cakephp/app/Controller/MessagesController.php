@@ -245,47 +245,24 @@ class MessagesController extends AppController {
         $this->autoRender = false;
         $this->layout = 'ajax';
     
-        if ($this->request->is('ajax')) {
-            $query = $this->request->query('query');
-            $userId = $this->Auth->user('id');
-    
+        if ($this->request->is('get')) {
+            $query = $this->request->query('q');
             $messages = $this->Message->find('all', array(
                 'conditions' => array(
-                    'OR' => array(
-                        array('Message.sender_id' => $userId),
-                        array('Message.recipient_id' => $userId)
-                    ),
                     'Message.message LIKE' => '%' . $query . '%'
                 ),
-                'order' => array('Message.created' => 'DESC'),
-                'limit' => 10
+                'contain' => array('User'),
+                'fields' => array('Message.id', 'Message.message', 'Message.created', 'User.propic', 'User.name')
             ));
     
             $this->set('messages', $messages);
-            $this->set('userId', $userId);
-            $this->set('conversationUsers', $this->_getConversationUsers($messages));
-            $this->render('search_results', 'ajax');
+            $this->set('userId', $this->Auth->user('id'));
+            $this->set('conversationUsers', $this->Message->User->find('list', array(
+                'fields' => array('User.id', 'User.name')
+            )));
+    
+            $this->render('messages'); // Render `messages.ctp` element
         }
     }
     
-    protected function _getConversationUsers($messages) {
-        $userIds = array();
-        foreach ($messages as $message) {
-            $userIds[] = $message['Message']['sender_id'];
-            $userIds[] = $message['Message']['recipient_id'];
-        }
-        $userIds = array_unique($userIds);
-    
-        $users = $this->Message->User->find('all', array(
-            'conditions' => array('User.id' => $userIds),
-            'fields' => array('id', 'name', 'propic')
-        ));
-    
-        $conversationUsers = array();
-        foreach ($users as $user) {
-            $conversationUsers[$user['User']['id']] = $user;
-        }
-    
-        return $conversationUsers;
-    }
 }
