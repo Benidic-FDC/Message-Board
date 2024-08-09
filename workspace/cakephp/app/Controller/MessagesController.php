@@ -82,7 +82,6 @@ class MessagesController extends AppController {
             ),
             'order' => array('Message.created' => 'ASC')
         ));
-        debug($messages);
 
         $you = $this->User->findById($userId);
         $sender = $this->User->findById($sender_id);

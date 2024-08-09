@@ -7,10 +7,13 @@
                 </div>
             <?php endif; ?>
             <div class="row mb-4 align-items-center">
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <h1 class="display-5 fw-bold">Message List</h1>
                 </div>
-                <div class="col-md-4 text-md-end">
+                <div class="col-md-4 float-end">
+                    <input type="search" id="searchMessage" class="form-control" placeholder="Search Message">
+                </div>
+                <div class="col-md-2 text-md-end">
                     <?php echo $this->Html->link('New Message', array('controller' => 'messages', 'action' => 'new_message'), array('class' => 'btn btn-primary shadow-lg')); ?>
                 </div>
             </div>
