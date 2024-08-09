@@ -4,13 +4,11 @@ class HomeController extends AppController {
 	
 	public function beforeFilter (){
 		parent::beforeFilter();
-		echo "hello from home beforeFilter";
-
+		// echo "hello from home beforeFilter";
 	}
-
+	
 	public function index (){
-		echo "die";
-		die();
+		
 	}
 
 	public function main ($page=''){
@@ -33,4 +31,5 @@ class HomeController extends AppController {
 	public function getAge () {
 		return 111;
 	}
+
 }

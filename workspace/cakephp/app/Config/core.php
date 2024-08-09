@@ -226,13 +226,22 @@
  * To use database sessions, run the app/Config/Schema/sessions.php schema using
  * the cake shell command: cake schema create Sessions
  */
-	Configure::write('Session', array(
-		'defaults' => 'php'
-	));
+Configure::write('Session', array(
+    'defaults' => 'php',
+    'ini' => array(
+        'session.cookie_lifetime' => 0, // Session cookie will expire when the browser is closed
+        'session.gc_maxlifetime' => 3600, // Session garbage collection max lifetime
+        'session.cookie_secure' => false, // Set to true if using HTTPS
+    ),
+    'timeout' => 30, // Session timeout in minutes
+    'checkAgent' => false, // Set to true if you want to check the user agent for session validation
+    'cookie' => 'cakephp_session', // Session cookie name
+));
 
 /**
  * A random string used in security hashing methods.
  */
+	Configure::write('Security.level', 'medium');
 	Configure::write('Security.salt', 'qQU3jJR2S9051Dj98525oX6gI2166M1YJm2R88GOj107Xi0460khvW6frLYi5FLbEjcg9K');
 
 /**

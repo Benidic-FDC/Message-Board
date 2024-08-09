@@ -36,11 +36,13 @@ class AppController extends Controller {
 
     // include the Post Model
     public $uses = array(
-        'Post'
+        'Post',
+        'User'
     );
 
     // - include components
     public $components = array(
+        'Session',
         'Flash',
         'Auth' => array(
             // if the user is logged in
@@ -57,9 +59,8 @@ class AppController extends Controller {
             ),
             'authenticate' => array(
                 'Form' => array(
-                    // 'passwordHasher' => 'Blowfish',
-                    // if you want to customize the fields for logging in
-                    // 'fields'=>array('username'=>'email','password'=>'password')
+                    'username' => 'email',
+                    'password' => 'password'
                 )
             )
         )
@@ -69,7 +70,17 @@ class AppController extends Controller {
         parent::beforeFilter();
         
         // global restriction
-        // $this->Auth->allow('index', 'view', 'add');
+        // $this->Auth->allow('add', 'thankyou', 'login');
         $this->set('currentUser', $this->Auth->user());
+    }
+
+    public function beforeRender() {
+        parent::beforeRender();
+        $userId = $this->Auth->user('id');
+        
+        if ($userId) {
+            $user = $this->User->findById($userId);
+            $this->set('user', $user['User']);
+        }
     }
 }

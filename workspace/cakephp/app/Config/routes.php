@@ -25,14 +25,17 @@
  * its action called 'display', and we pass a param to select the view file
  * to use (in this case, /app/View/Pages/home.ctp)...
  */
-	Router::connect('/', array('controller' => 'Home', 'action' => 'main', 'home'));	
+	Router::connect('/', array('controller' => 'Users', 'action' => 'login'));
 	Router::connect('/posts', array('controller' => 'Posts', 'action' => 'index'));	
 	Router::connect('/tab_page/*', array('controller' => 'Home', 'action' => 'tab'));	
 	Router::connect('/work-experience', array('controller' => 'WorkExperience', 'action' => 'index'));
 	Router::connect('/about-me', array('controller' => 'AboutMe', 'action' => 'index'));
 	Router::connect('/photo-gallery', array('controller' => 'PhotoGallery', 'action' => 'index'));
 	Router::connect('/contact-me/*', array('controller' => 'ContactMe', 'action' => 'index'));
-
+	Router::connect('/messages/search', array('controller' => 'messages', 'action' => 'search'));
+	Router::connect('/messages/reply', array('controller' => 'messages', 'action' => 'reply'));
+	Router::connect('/messages/index/*', array('controller' => 'messages', 'action' => 'index'));
+	Router::connect('/messages/searchmessage', array('controller' => 'messages', 'action' => 'messageSearch'));
 /**
  * ...and connect the rest of 'Pages' controller's URLs.
  */
